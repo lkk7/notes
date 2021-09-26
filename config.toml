@@ -27,7 +27,7 @@ paginate = 10
 
 [params]
   author = "Łukasz Łapiński"
-  subTitle = "A minimal Hugo theme."
+  subTitle = "Notes I'd like to keep in external memory."
   defaultTheme = "dark"
   sourceURL = "https://github.com/lkk7/notes"
   showWordCounter = true
