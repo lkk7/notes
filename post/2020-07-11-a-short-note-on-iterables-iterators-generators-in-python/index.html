@@ -1,0 +1,221 @@
+<!doctype html><html lang=en>
+<head>
+<meta charset=utf-8>
+<meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no">
+<meta name=HandheldFriendly content="True">
+<meta http-equiv=x-ua-compatible content="IE=edge">
+<meta http-equiv=cache-control content="no-transform">
+<meta http-equiv=cache-control content="no-siteapp">
+<meta name=generator content="Hugo 0.88.1">
+<link rel="shortcut icon" href=https://cdn.jsdelivr.net/gh/dsrkafuu/dsr-cdn-main@1/images/favicons/dsrca.ico>
+<title>A short note on iterables, iterators, generators in Python - My notes</title>
+<meta name=author content="Łukasz Łapiński">
+<meta name=description content="A test post">
+<meta name=keywords content="python">
+<meta property="og:title" content="A short note on iterables, iterators, generators in Python">
+<meta name=twitter:title content="A short note on iterables, iterators, generators in Python">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://www.lkk7.com/notes/post/2020-07-11-a-short-note-on-iterables-iterators-generators-in-python/"><meta property="og:description" content="A test post">
+<meta name=twitter:description content="A test post"><meta property="og:image" content="https://www.lkk7.com/img/og.png">
+<meta name=twitter:card content="summary_large_image">
+<meta name=twitter:image content="https://www.lkk7.com/img/og.png"><meta property="article:published_time" content="2020-07-11T00:00:00+02:00"><meta property="article:modified_time" content="2020-07-11T00:00:00+02:00">
+<style>@media(prefers-color-scheme:dark){body[data-theme=auto] img{filter:brightness(60%)}}body[data-theme=dark] img{filter:brightness(60%)}</style>
+<link rel=stylesheet href=https://www.lkk7.com/notes/assets/css/fuji.min.css>
+</head>
+<body data-theme=dark data-theme-auto=false>
+<script data-cfasync=false>var fujiThemeData=localStorage.getItem('fuji_data-theme');fujiThemeData?fujiThemeData!=='auto'&&document.body.setAttribute('data-theme',fujiThemeData==='dark'?'dark':'light'):localStorage.setItem('fuji_data-theme','auto')</script>
+<header>
+<div class="container-lg clearfix">
+<div class="col-12 header">
+<a class=title-main href=https://www.lkk7.com/notes>My notes</a>
+<span class=title-sub>Notes I'd like to keep in external memory.</span>
+</div>
+</div>
+</header>
+<main>
+<div class="container-lg clearfix">
+<div class="col-12 col-md-9 float-left content">
+<article>
+<h2 class="post-item post-title">
+<a href=https://www.lkk7.com/notes/post/2020-07-11-a-short-note-on-iterables-iterators-generators-in-python/>A short note on iterables, iterators, generators in Python</a>
+</h2>
+<div class="post-item post-meta">
+<span><i class="iconfont icon-today-sharp"></i>&nbsp;2020-07-11</span>
+<span><i class="iconfont icon-file-tray-sharp"></i>&nbsp;736 words</span>
+<span><i class="iconfont icon-pricetags-sharp"></i>&nbsp;<a href=/notes/tags/python>python</a>&nbsp;</span>
+</div>
+<div class="post-content markdown-body">
+<p>This subject may seem complicated: generators create generator iterators (which are iterables). To make that sentence sound understandable, here&rsquo;s a short note about the topic.</p>
+<p><strong>(Type hinting in every code snippet has been omitted for simplicity)</strong></p>
+<h3 id=iterables>Iterables</h3>
+<p>The docs [1] briefly explain iterables:<br>
+<em>An object capable of returning its members one at a time. Examples of iterables include all sequence types (such as list, str, and tuple) and some non-sequence types like dict, file objects [&mldr;] Iterables can be used in a for loop and in many other places where a sequence is needed (zip(), map(), …).</em><br>
+In essence, iterables are everything that you can loop over with a <code>for</code> loop.</p>
+<p>An important detail is that they have a method <code>__iter__()</code> which returns an iterator for them (or an equivalent <code>iter()</code> built-in function).</p>
+<h3 id=iterators>Iterators</h3>
+<p>An iterator is an object used to iterate over iterables. When we loop over a list with a <code>for</code> statement, the iterator is created behind the scenes and we don&rsquo;t have to worry about it. However, we can try to manually loop over the list with an iterator like this:</p>
+<pre><code class=language-python>numbers = [1, 2, 3]
+it = iter(numbers)   # This is the iterator object
+print(it.__next__()) # 1
+print(it.__next__()) # 2
+print(next(it))      # 3 (this is the same thing as __next__())
+print(it.__next__()) # StopIteration exception
+</code></pre>
+<p>As we see, an iterator gets &ldquo;worn out&rdquo; after it has iterated over everything it had to. It throws a special StopIteration exception. We&rsquo;d have to create a new iterator if we wanted to iterate again. Besides the <code>__next__()</code> method (which is synonymous to calling <code>next()</code> on the iterator, as seen in example above), the iterator should also have a method <code>__iter__</code> [1]. It just returns the iterator itself, making any iterator also an iterable (because, as I pointed out in the earlier section, every iterable has a <code>__next__()</code> method).</p>
+<pre><code class=language-python>a = iter([1, 2, 3])
+print(a is a.__iter__())  # True
+</code></pre>
+<h3 id=generators>Generators</h3>
+<p>A generator is a function which returns a generator iterator (just a special kind of iterator). This iterator is returned through usage of <code>yield</code> keyword. As the docs [1] say:<br>
+<em>Each yield temporarily suspends processing, remembering the location execution state (including local variables and pending try-statements). When the generator iterator resumes, it picks up where it left off (in contrast to functions which start fresh on every invocation).</em></p>
+<p>Let&rsquo;s clear this up with an example:</p>
+<pre><code class=language-python>def double_range(start, stop):
+    for i in range(start, stop):
+	yield 2 * i
+it = double_range(0, 3)  # our generator iterator, has the __next__ method
+print(it)                # &lt;generator object double at 0x10e900820&gt;
+print(it.__next__())     # 0
+print(it.__next__())     # 2
+print(next(it))          # 4
+print(next(it))          # StopIteration exception
+</code></pre>
+<p>The shortest and simplest explanation is: the generator iterator returned from our <code>double_range</code> function is like a list, but we retrieve elements one at a time, when they are needed. That is called <strong>lazy evaluation</strong>. Subsequent calls to <code>__next__()</code> get subsequent elements. They aren&rsquo;t all calculated at <code>it = double_range(0, 3)</code> line. They would be calculated at definition time if we used a list:</p>
+<pre><code class=language-python>a = double_range(0, 3)
+print(a)  # &lt;generator object double_range at 0x104cd9200&gt;
+a = [2 * i for i in range(0, 3)]
+print(a)  # [0, 2, 4]
+</code></pre>
+<p>In fact, we used list comprehension syntax there. Is there a &ldquo;generator comprehension&rdquo;? Yes, and we call it a generator expression:</p>
+<pre><code class=language-python>a = (2 * i for i in range(0, 3))
+print(a)            # &lt;generator object &lt;genexpr&gt; at 0x104cd9660&gt;
+print(next(a))      # 0
+print(a.__next__()) # 2
+print(next(a))      # 4
+print(next(a))      # StopIteration exception
+</code></pre>
+<p>Definitely shorter syntax than a full function, and it does the same thing. However, it could be discussed if it&rsquo;s more readable. Also, do not mistake generator expressions for tuples.</p>
+<h3 id=a-very-short-note-about-use-cases-for-generators>A very short note about use cases for generators</h3>
+<p>I believe that the information presented here is more than enough to start using generators. But why would we want to use them? They may seem like a worse list/tuple at first. It turns out there&rsquo;s a big advantage to them – memory usage. As we know now, generators calculate elements of a sequence one at a time. That may save memory and allow us to process large files, theoretically infinite sequences or &ldquo;online&rdquo; data streams.</p>
+<p>The simplest example – creating infinite sequences over which we can iterate easily:</p>
+<pre><code class=language-python>def numbers():
+    n = -999999999
+    while True:
+        yield n
+        n += 1
+
+for i in numbers():
+    print(i)
+# -999999999, -999999998, ...
+</code></pre>
+<h2 id=sources>Sources:</h2>
+<ul>
+<li>[1] <a href=https://docs.python.org target=_blank>https://docs.python.org</a> Python Software Foundation. Python Documentation</li>
+</ul>
+</div>
+</article>
+</div>
+<aside class="col-12 col-md-3 float-left sidebar">
+<div class="sidebar-item sidebar-pages">
+<h3>Pages</h3>
+<ul>
+<li>
+<a href=/notes/>Home (notes)</a>
+</li>
+<li>
+<a href=https://www.lkk7.com>About me</a>
+</li>
+<li>
+<a href=/notes/archives/>Archives</a>
+</li>
+<li>
+<a href=/notes/search/>Search</a>
+</li>
+<li>
+<a href=/notes/index.xml>RSS</a>
+</li>
+</ul>
+</div>
+<div class="sidebar-item sidebar-tags">
+<h3>Tags</h3>
+<div>
+<span>
+<a href=/notes/tags/c++/>c++</a>
+</span>
+<span>
+<a href=/notes/tags/javascript/>javascript</a>
+</span>
+<span>
+<a href=/notes/tags/python/>python</a>
+</span>
+</div>
+</div>
+</aside>
+</div>
+<div class=btn>
+<div class=btn-menu id=btn-menu>
+<i class="iconfont icon-grid-sharp"></i>
+</div>
+<div class=btn-toggle-mode>
+<i class="iconfont icon-contrast-sharp"></i>
+</div>
+<div class=btn-scroll-top>
+<i class="iconfont icon-chevron-up-circle-sharp"></i>
+</div>
+</div>
+<aside class=sidebar-mobile style=display:none>
+<div class=sidebar-wrapper>
+<div class="sidebar-item sidebar-pages">
+<h3>Pages</h3>
+<ul>
+<li>
+<a href=/notes/>Home (notes)</a>
+</li>
+<li>
+<a href=https://www.lkk7.com>About me</a>
+</li>
+<li>
+<a href=/notes/archives/>Archives</a>
+</li>
+<li>
+<a href=/notes/search/>Search</a>
+</li>
+<li>
+<a href=/notes/index.xml>RSS</a>
+</li>
+</ul>
+</div>
+<div class="sidebar-item sidebar-tags">
+<h3>Tags</h3>
+<div>
+<span>
+<a href=/notes/tags/c++/>c++</a>
+</span>
+<span>
+<a href=/notes/tags/javascript/>javascript</a>
+</span>
+<span>
+<a href=/notes/tags/python/>python</a>
+</span>
+</div>
+</div>
+</div>
+</aside>
+</main>
+<footer>
+<div class="container-lg clearfix">
+<div class="col-12 footer">
+<span>&copy; 2020-2021
+<a href=https://www.lkk7.com/notes>Łukasz Łapiński</a>
+| <a href=https://github.com/lkk7/notes>Source code</a>
+| Powered by <a href=https://github.com/dsrkafuu/hugo-theme-fuji/ target=_blank>Fuji-v2</a> & <a href=https://gohugo.io/ target=_blank>Hugo</a>
+</span>
+</div>
+</div>
+</footer>
+<script defer src=https://cdn.jsdelivr.net/npm/medium-zoom@1.0.6/dist/medium-zoom.min.js></script>
+<script defer src=https://cdn.jsdelivr.net/npm/lazysizes@5.3.2/lazysizes.min.js></script>
+<script defer src=https://cdn.jsdelivr.net/npm/prismjs@1.23.0/components/prism-core.min.js></script>
+<script defer src=https://cdn.jsdelivr.net/npm/prismjs@1.23.0/plugins/autoloader/prism-autoloader.min.js></script>
+<script defer src=/notes/assets/js/fuji.min.js></script>
+</body>
+</html>
