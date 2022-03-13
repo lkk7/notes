@@ -1,3 +1,3 @@
 User-agent: *
-
-Sitemap: https://www.lkk7.com/sitemap.xml
+Disallow:
+Sitemap: https://www.lkk7.com/notes/sitemap.xml
