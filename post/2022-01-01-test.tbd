@@ -1,7 +1,6 @@
 +++
-title = "xyz"
+title = "Test title"
 date = 2022-03-15T00:00:00+02:00
-description = "xyz desc"
 tags = ["python", "c++", "javascript"]
 +++
 

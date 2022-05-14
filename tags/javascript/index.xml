@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
-    <title>javascript on My Notes</title>
+    <title>javascript on lkk7/notes</title>
     <link>https://www.lkk7.com/notes/tags/javascript/</link>
-    <description>Recent content in javascript on My Notes</description>
+    <description>Recent content in javascript on lkk7/notes</description>
     <generator>Hugo -- gohugo.io</generator>
     <lastBuildDate>Wed, 21 Apr 2021 00:00:00 +0200</lastBuildDate><atom:link href="https://www.lkk7.com/notes/tags/javascript/index.xml" rel="self" type="application/rss+xml" />
     <item>
@@ -12,7 +12,7 @@
       <pubDate>Wed, 21 Apr 2021 00:00:00 +0200</pubDate>
       
       <guid>https://www.lkk7.com/notes/post/2021-06-20-basic-overview-of-constants-mutability-in-python-cpp-js-copy/</guid>
-      <description>Constants/mutability in Python, C&#43;&#43; and JavaScript</description>
+      <description>&lt;p&gt;Here I compare the concept of constants, mutability and things around it – across Python, C++ and JavaScript. Of course, this note does not describe the topic in its entirety.&lt;/p&gt;</description>
     </item>
     
   </channel>
