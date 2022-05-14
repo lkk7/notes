@@ -1,7 +1,6 @@
 +++
 title = "About numpy.indices"
 date = 2018-08-05T00:00:00+02:00
-description = "About numpy.indices"
 tags = ["python"]
 aplayer = false
 showLicense = false

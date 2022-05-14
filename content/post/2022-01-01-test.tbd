@@ -1,0 +1,19 @@
++++
+title = "Test title"
+date = 2022-03-15T00:00:00+02:00
+tags = ["python", "c++", "javascript"]
++++
+
+Here I compare the concept of constants, mutability and things around it – across Python, C++ and JavaScript. Of course, this note does not describe the topic in its entirety.
+
+<!--more-->
+
+**(For Python, type hinting in every code snippet has been omitted for simplicity)**
+
+## Python
+
+## Sources:
+
+- [1] [https://docs.python.org/3/reference](https://docs.python.org/3/reference) Python Software Foundation. The Python Language Reference
+- [2] [https://en.cppreference.com](https://en.cppreference.com) cppreference.com – C and C++ reference
+- [3] [https://developer.mozilla.org](https://developer.mozilla.org) – MDN Web Docs

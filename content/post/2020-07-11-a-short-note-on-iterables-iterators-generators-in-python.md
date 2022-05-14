@@ -1,7 +1,6 @@
 +++
-title = "A short note on iterables, iterators, generators in Python"
+title = "A short note on iterables, iterators and generators in Python"
 date = 2020-07-11T00:00:00+02:00
-description = "A test post"
 tags = ["python"]
 aplayer = false
 showLicense = false

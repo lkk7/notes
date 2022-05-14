@@ -1,7 +1,6 @@
 +++
 title = "Basic overview of constants/mutability in Python, C++ and JavaScript"
 date = 2021-04-21T00:00:00+02:00
-description = "Constants/mutability in Python, C++ and JavaScript"
 tags = ["python", "c++", "javascript"]
 aplayer = false
 showLicense = false
